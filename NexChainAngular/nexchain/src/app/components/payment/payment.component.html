@@ -1,0 +1,556 @@
+<!--<div class="container">-->
+<!--    <h2>Payments</h2>-->
+
+<!--    &lt;!&ndash; Add Payment Form &ndash;&gt;-->
+<!--    <div class="card">-->
+<!--      <div class="card-header">-->
+<!--        Add New Payment-->
+<!--      </div>-->
+<!--      <div class="card-body">-->
+<!--        <form [formGroup]="paymentForm" (ngSubmit)="addPayment()">-->
+<!--          <div class="form-group">-->
+<!--            <label for="procurementId">Payment ID</label>-->
+<!--            <input type="number" class="form-control" id="procurementId" formControlName="procurementId">-->
+<!--          </div>-->
+<!--          <div class="form-group">-->
+<!--            <label for="paymentAccount">Payment Account</label>-->
+<!--            <input type="text" class="form-control" id="paymentAccount" formControlName="paymentAccount">-->
+<!--          </div>-->
+<!--          <div class="form-group">-->
+<!--            <label for="paymentAmount">Payment Amount</label>-->
+<!--            <input type="number" class="form-control" id="paymentAmount" formControlName="paymentAmount">-->
+<!--          </div>-->
+<!--          <div class="form-group">-->
+<!--            <label for="paymentDate">Payment Date</label>-->
+<!--            <input type="date" class="form-control" id="paymentDate" formControlName="paymentDate">-->
+<!--          </div>-->
+<!--          <button type="submit" class="btn btn-primary">Add Payment</button>-->
+<!--        </form>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Payment List &ndash;&gt;-->
+<!--    <div class="mt-4">-->
+<!--      <h3>Payment List</h3>-->
+<!--      <table class="table">-->
+<!--        <thead>-->
+<!--          <tr>-->
+<!--            <th>ID</th>-->
+<!--            <th>Procurement ID</th>-->
+<!--            <th>Payment Account</th>-->
+<!--            <th>Payment Amount</th>-->
+<!--            <th>Payment Date</th>-->
+<!--            <th>Action</th>-->
+<!--          </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--          <tr *ngFor="let payment of payments">-->
+<!--            <td>{{ payment.paymentID }}</td>-->
+<!--            <td>{{ payment.procurement?.id }}</td>-->
+<!--            <td>{{ payment.paymentAccount }}</td>-->
+<!--            <td>{{ payment.paymentAmount }}</td>-->
+<!--            <td>{{ payment.paymentDate }}</td>-->
+<!--            <td>-->
+<!--              <button class="btn btn-danger" (click)="deletePayment(payment.paymentID)">Delete</button>-->
+<!--            </td>-->
+<!--          </tr>-->
+<!--        </tbody>-->
+<!--      </table>-->
+<!--    </div>-->
+<!--  </div>-->
+
+
+
+<!--  <div class="container">-->
+<!--    <div class="row">-->
+<!--      <div class="col-md-6">-->
+
+
+<!--        &lt;!&ndash; Payment ID input field &ndash;&gt;-->
+<!--        <form [formGroup]="searchForm">-->
+<!--          <div class="form-group">-->
+<!--            <label for="paymentId">Enter Payment ID:</label>-->
+<!--            <input type="number" id="paymentId" formControlName="paymentId" class="form-control">-->
+<!--          </div>-->
+<!--        </form>-->
+<!-- <br>-->
+<!--         &lt;!&ndash; Left side: Search button &ndash;&gt;-->
+<!--         <button class="btn btn-primary" (click)="searchPayment()">Search Payment</button>-->
+<!--      </div>-->
+<!--      <div class="col-md-6">-->
+<!--        &lt;!&ndash; Right side: Display searched payment data &ndash;&gt;-->
+<!--        <div *ngIf="searchedPayment" class="card">-->
+<!--          <div class="card-header">Searched Payment Details</div>-->
+<!--          <div class="card-body">-->
+<!--            <p><strong>Payment ID:</strong> {{ searchedPayment.paymentID }}</p>-->
+<!--            <p><strong>Procurement ID:</strong> {{ searchedPayment.procurement?.id}}</p>-->
+<!--            <p><strong>Payment Account:</strong> {{ searchedPayment.paymentAccount }}</p>-->
+<!--            <p><strong>Payment Amount:</strong> {{ searchedPayment.paymentAmount }}</p>-->
+<!--            <p><strong>Payment Date:</strong> {{ searchedPayment.paymentDate | date }}</p>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div *ngIf="!searchedPayment && searchPerformed" class="alert alert-warning" role="alert">-->
+<!--          No payment found with the provided ID.-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--============ new code =================-->
+
+<!--<div class="container">-->
+<!--  <h2>Payments</h2>-->
+
+<!--  &lt;!&ndash; Add Payment Form &ndash;&gt;-->
+<!--  <div class="card">-->
+<!--    <div class="card-header">-->
+<!--      Add New Payment-->
+<!--    </div>-->
+<!--    <div class="card-body">-->
+<!--      <form [formGroup]="paymentForm" (ngSubmit)="addPayment()">-->
+<!--        &lt;!&ndash; Procurement Dropdown &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--          <label for="procurement">Procurement</label>-->
+<!--&lt;!&ndash;          <select class="form-control" id="procurement" formControlName="procurementId">&ndash;&gt;-->
+<!--&lt;!&ndash;            <option *ngFor="let procurement of procurements" [value]="procurement.id">{{ procurement.procurementName }}</option>&ndash;&gt;-->
+<!--&lt;!&ndash;          </select>&ndash;&gt;-->
+<!--          <select class="form-control" id="procurement" formControlName="procurementId">-->
+<!--            <option *ngFor="let procurement of procurements" [value]="procurement.id">-->
+<!--              {{ procurement.supplier?.supplierName }} - {{ procurement.rawMaterial?.materialName }}-->
+<!--            </option>-->
+<!--          </select>-->
+
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Payment Account &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--          <label for="paymentAccount">Payment Account</label>-->
+<!--          <input type="text" class="form-control" id="paymentAccount" formControlName="paymentAccount">-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Payment Amount &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--          <label for="paymentAmount">Payment Amount</label>-->
+<!--          <input type="number" class="form-control" id="paymentAmount" formControlName="paymentAmount">-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Payment Date &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--          <label for="paymentDate">Payment Date</label>-->
+<!--          <input type="date" class="form-control" id="paymentDate" formControlName="paymentDate">-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Submit Button &ndash;&gt;-->
+<!--        <button type="submit" class="btn btn-primary">Add Payment</button>-->
+<!--      </form>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; Payment List &ndash;&gt;-->
+<!--  <div class="mt-4">-->
+<!--    <h3>Payment List</h3>-->
+<!--    <table class="table">-->
+<!--      <thead>-->
+<!--      <tr>-->
+<!--        <th>ID</th>-->
+<!--        <th>Procurement ID</th>-->
+<!--        <th>Payment Account</th>-->
+<!--        <th>Payment Amount</th>-->
+<!--        <th>Payment Date</th>-->
+<!--        <th>Action</th>-->
+<!--      </tr>-->
+<!--      </thead>-->
+<!--      <tbody>-->
+<!--      <tr *ngFor="let payment of payments">-->
+<!--        <td>{{ payment.paymentID }}</td>-->
+<!--        <td>{{ payment.procurement?.id }}</td>-->
+<!--        <td>{{ payment.paymentAccount }}</td>-->
+<!--        <td>{{ payment.paymentAmount }}</td>-->
+<!--        <td>{{ payment.paymentDate }}</td>-->
+<!--        <td>-->
+<!--          <button class="btn btn-danger" (click)="deletePayment(payment.paymentID)">Delete</button>-->
+<!--        </td>-->
+<!--      </tr>-->
+<!--      </tbody>-->
+<!--    </table>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--================ new code for searc================-->
+<!--<div class="container">-->
+<!--  <h2>Payments</h2>-->
+
+<!--  &lt;!&ndash; Add Payment Form &ndash;&gt;-->
+<!--  <div class="card">-->
+<!--    <div class="card-header">-->
+<!--      Add New Payment-->
+<!--    </div>-->
+<!--    <div class="card-body">-->
+<!--      <form [formGroup]="paymentForm" (ngSubmit)="addPayment()">-->
+<!--        &lt;!&ndash; Procurement Dropdown &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--          <label for="procurement">Procurement</label>-->
+<!--          <select class="form-control" id="procurement" formControlName="procurementId">-->
+<!--            <option *ngFor="let procurement of procurements" [value]="procurement.id">-->
+<!--              {{ procurement.supplier?.supplierName }}-->
+<!--            </option>-->
+<!--          </select>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Payment Account &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--          <label for="paymentAccount">Payment Account</label>-->
+<!--          <input type="text" class="form-control" id="paymentAccount" formControlName="paymentAccount">-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Payment Amount &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--          <label for="paymentAmount">Payment Amount</label>-->
+<!--          <input type="number" class="form-control" id="paymentAmount" formControlName="paymentAmount">-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Payment Date &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--          <label for="paymentDate">Payment Date</label>-->
+<!--          <input type="date" class="form-control" id="paymentDate" formControlName="paymentDate">-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Submit Button &ndash;&gt;-->
+<!--        <button type="submit" class="btn btn-primary">Add Payment</button>-->
+<!--      </form>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; Search Payment Form &ndash;&gt;-->
+<!--  <div class="mt-4">-->
+<!--    <h3>Search Payment</h3>-->
+<!--    <form [formGroup]="searchForm" (ngSubmit)="searchPayment()">-->
+<!--      <div class="form-group">-->
+<!--        <label for="paymentId">Payment ID</label>-->
+<!--        <input type="number" class="form-control" id="paymentId" formControlName="paymentId" placeholder="Enter Payment ID">-->
+<!--      </div>-->
+<!--      <button type="submit" class="btn btn-success">Search</button>-->
+<!--    </form>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; Display Search Result &ndash;&gt;-->
+<!--  <div *ngIf="searchedPayment" class="mt-4">-->
+<!--    <h3>Payment Details</h3>-->
+<!--    <p><strong>ID:</strong> {{ searchedPayment.paymentID }}</p>-->
+<!--    <p><strong>Procurement ID:</strong> {{ searchedPayment.procurement?.id }}</p>-->
+<!--    <p><strong>Payment Account:</strong> {{ searchedPayment.paymentAccount }}</p>-->
+<!--    <p><strong>Payment Amount:</strong> {{ searchedPayment.paymentAmount }}</p>-->
+<!--    <p><strong>Payment Date:</strong> {{ searchedPayment.paymentDate | date }}</p>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; Payment List &ndash;&gt;-->
+<!--  <div class="mt-4">-->
+<!--    <h3>Payment List</h3>-->
+<!--    <table class="table">-->
+<!--      <thead>-->
+<!--      <tr>-->
+<!--        <th>ID</th>-->
+<!--        <th>Procurement ID</th>-->
+<!--        <th>Payment Account</th>-->
+<!--        <th>Payment Amount</th>-->
+<!--        <th>Payment Date</th>-->
+<!--        <th>Action</th>-->
+<!--      </tr>-->
+<!--      </thead>-->
+<!--      <tbody>-->
+<!--      <tr *ngFor="let payment of payments">-->
+<!--        <td>{{ payment.paymentID }}</td>-->
+<!--        <td>{{ payment.procurement?.id }}</td>-->
+<!--        <td>{{ payment.paymentAccount }}</td>-->
+<!--        <td>{{ payment.paymentAmount }}</td>-->
+<!--        <td>{{ payment.paymentDate }}</td>-->
+<!--        <td>-->
+<!--          <button class="btn btn-danger" (click)="deletePayment(payment.paymentID)">Delete</button>-->
+<!--        </td>-->
+<!--      </tr>-->
+<!--      </tbody>-->
+<!--    </table>-->
+<!--  </div>-->
+<!--</div>-->
+
+
+<!--============== new code ==================-->
+
+<!--<div class="container">-->
+<!--  <h2>Payments</h2>-->
+
+<!--  &lt;!&ndash; Add Payment Form &ndash;&gt;-->
+<!--  <div class="card">-->
+<!--    <div class="card-header">Add New Payment</div>-->
+<!--    <div class="card-body">-->
+<!--      <form [formGroup]="paymentForm" (ngSubmit)="addPayment()">-->
+<!--        <div class="form-group">-->
+<!--          <label for="procurement">Procurement</label>-->
+<!--          <select class="form-control" id="procurement" formControlName="procurementId">-->
+<!--            <option *ngFor="let procurement of procurements" [value]="procurement.id">-->
+<!--              {{ procurement.supplier?.supplierName }}-->
+<!--            </option>-->
+<!--          </select>-->
+<!--        </div>-->
+
+<!--        <div class="form-group">-->
+<!--          <label for="paymentAccount">Payment Account</label>-->
+<!--          <input type="text" class="form-control" id="paymentAccount" formControlName="paymentAccount" />-->
+<!--        </div>-->
+
+<!--        <div class="form-group">-->
+<!--          <label for="paymentAmount">Payment Amount</label>-->
+<!--          <input type="number" class="form-control" id="paymentAmount" formControlName="paymentAmount" />-->
+<!--        </div>-->
+
+<!--        <div class="form-group">-->
+<!--          <label for="paymentDate">Payment Date</label>-->
+<!--          <input type="date" class="form-control" id="paymentDate" formControlName="paymentDate" />-->
+<!--        </div>-->
+
+<!--        <div class="form-group">-->
+<!--          <label for="paymentMethod">Payment Method</label>-->
+<!--          <select class="form-control" id="paymentMethod" formControlName="paymentMethod">-->
+<!--            <option value="Card">Card</option>-->
+<!--            <option value="Bkash">Bkash</option>-->
+<!--            <option value="Nagad">Nagad</option>-->
+<!--          </select>-->
+<!--        </div>-->
+
+<!--        <div class="form-group">-->
+<!--          <label for="transactionId">Transaction ID</label>-->
+<!--          <input type="text" class="form-control" id="transactionId" formControlName="transactionId" />-->
+<!--        </div>-->
+
+<!--        <button type="submit" class="btn btn-primary">Add Payment</button>-->
+<!--      </form>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  <div class="mt-4">-->
+<!--    <h3>Payment List</h3>-->
+<!--    <table class="table">-->
+<!--      <thead>-->
+<!--      <tr>-->
+<!--        <th>ID</th>-->
+<!--        <th>Procurement ID</th>-->
+<!--        <th>Payment Account</th>-->
+<!--        <th>Payment Amount</th>-->
+<!--        <th>Payment Date</th>-->
+<!--        <th>Payment Method</th>-->
+<!--        <th>Transaction ID</th>-->
+<!--        <th>Action</th>-->
+<!--      </tr>-->
+<!--      </thead>-->
+<!--      <tbody>-->
+<!--      <tr *ngFor="let payment of payments">-->
+<!--        <td>{{ payment.paymentID }}</td>-->
+<!--        <td>{{ payment.procurement?.id }}</td>-->
+<!--        <td>{{ payment.paymentAccount }}</td>-->
+<!--        <td>{{ payment.paymentAmount }}</td>-->
+<!--        <td>{{ payment.paymentDate | date }}</td>-->
+<!--        <td>{{ payment.paymentMethod }}</td>-->
+<!--        <td>{{ payment.transactionId }}</td>-->
+<!--        <td>-->
+<!--          <button class="btn btn-danger" (click)="deletePayment(payment.paymentID)">Delete</button>-->
+<!--        </td>-->
+<!--      </tr>-->
+<!--      </tbody>-->
+<!--    </table>-->
+<!--  </div>-->
+<!--</div>-->
+
+
+<!--================ new code ================-->
+
+<div class="container">
+  <h2>Payments</h2>
+
+  <!-- Add/Edit Payment Form -->
+  <div class="card">
+    <div class="card-header">{{ isEditMode ? 'Edit Payment' : 'Add New Payment' }}</div>
+    <div class="card-body">
+      <form [formGroup]="paymentForm" (ngSubmit)="addOrUpdatePayment()">
+        <div class="form-group">
+          <label for="procurement">Procurement</label>
+          <select class="form-control" id="procurement" formControlName="procurementId">
+            <option *ngFor="let procurement of procurements" [value]="procurement.procurementID">
+              {{ procurement.supplier?.supplierName }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="paymentAccount">Payment Account</label>
+          <input type="text" class="form-control" id="paymentAccount" formControlName="paymentAccount" />
+        </div>
+
+        <div class="form-group">
+          <label for="paymentAmount">Payment Amount</label>
+          <input type="number" class="form-control" id="paymentAmount" formControlName="paymentAmount" />
+        </div>
+
+        <div class="form-group">
+          <label for="paymentDate">Payment Date</label>
+          <input type="date" class="form-control" id="paymentDate" formControlName="paymentDate" />
+        </div>
+
+        <div class="form-group">
+          <label for="paymentMethod">Payment Method</label>
+          <select class="form-control" id="paymentMethod" formControlName="paymentMethod">
+            <option value="Card">Card</option>
+            <option value="Bkash">Bkash</option>
+            <option value="Nagad">Nagad</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="transactionId">Transaction ID</label>
+          <input type="text" class="form-control" id="transactionId" formControlName="transactionId" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">{{ isEditMode ? 'Update Payment' : 'Add Payment' }}</button>
+        <button type="button" class="btn btn-secondary" (click)="resetForm()" *ngIf="isEditMode">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <h3>Payment List</h3>
+    <table class="table">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Procurement ID</th>
+        <th>Payment Account</th>
+        <th>Payment Amount</th>
+        <th>Payment Date</th>
+        <th>Payment Method</th>
+        <th>Transaction ID</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let payment of payments">
+        <td>{{ payment.paymentID }}</td>
+        <td>{{ payment.procurement?.procurementID }}</td>
+        <td>{{ payment.paymentAccount }}</td>
+        <td>{{ payment.paymentAmount }}</td>
+        <td>{{ payment.paymentDate | date }}</td>
+        <td>{{ payment.paymentMethod }}</td>
+        <td>{{ payment.transactionId }}</td>
+        <td>
+          <button class="btn btn-info" (click)="editPayment(payment)">Edit</button>
+          <button class="btn btn-danger" (click)="deletePayment(payment.paymentID)">Delete</button>
+          <button class="btn btn-secondary" (click)="printPayment(payment)">Print</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<!--=================== new code=========================-->
+<!--<link rel="stylesheet" href="payment.component.css">-->
+<!--<div class="container">-->
+<!--  <h2>Payments</h2>-->
+
+<!--  &lt;!&ndash; Add or Edit Payment Form &ndash;&gt;-->
+<!--  <div class="card">-->
+<!--    <div class="card-header">-->
+<!--      {{ isEditMode ? 'Edit Payment' : 'Add New Payment' }}-->
+<!--    </div>-->
+<!--    <div class="card-body">-->
+<!--      <form [formGroup]="paymentForm" (ngSubmit)="addOrUpdatePayment()">-->
+<!--        &lt;!&ndash; Procurement Dropdown &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--          <label for="procurement">Procurement</label>-->
+<!--          <select class="form-control" id="procurement" formControlName="procurementId">-->
+<!--            <option *ngFor="let procurement of procurements" [value]="procurement.id">-->
+<!--              {{ procurement.supplier?.supplierName }}-->
+<!--            </option>-->
+<!--          </select>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Payment Account &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--          <label for="paymentAccount">Payment Account</label>-->
+<!--          <input type="text" class="form-control" id="paymentAccount" formControlName="paymentAccount">-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Payment Amount &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--          <label for="paymentAmount">Payment Amount</label>-->
+<!--          <input type="number" class="form-control" id="paymentAmount" formControlName="paymentAmount">-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Payment Date &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--          <label for="paymentDate">Payment Date</label>-->
+<!--          <input type="date" class="form-control" id="paymentDate" formControlName="paymentDate">-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Payment Method &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--          <label for="paymentMethod">Payment Method</label>-->
+<!--          <select class="form-control" id="paymentMethod" formControlName="paymentMethod">-->
+<!--            <option value="Bank">Bank</option>-->
+<!--            <option value="Card">Card</option>-->
+<!--            <option value="Bkash">Bkash</option>-->
+<!--            <option value="Nagad">Nagad</option>-->
+<!--          </select>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Transaction ID &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--          <label for="transactionId">Transaction ID (Optional)</label>-->
+<!--          <input type="text" class="form-control" id="transactionId" formControlName="transactionId">-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Submit Button &ndash;&gt;-->
+<!--        <button type="submit" class="btn btn-primary">-->
+<!--          {{ isEditMode ? 'Update Payment' : 'Add Payment' }}-->
+<!--        </button>-->
+<!--        <button type="button" class="btn btn-secondary" *ngIf="isEditMode" (click)="resetForm()">Cancel</button>-->
+<!--      </form>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; Payment List &ndash;&gt;-->
+<!--  <div class="mt-4">-->
+<!--    <h3>Payment List</h3>-->
+<!--    <table class="table">-->
+<!--      <thead>-->
+<!--      <tr>-->
+<!--        <th>ID</th>-->
+<!--        <th>Procurement ID</th>-->
+<!--        <th>Payment Account</th>-->
+<!--        <th>Payment Amount</th>-->
+<!--        <th>Payment Date</th>-->
+<!--        <th>Payment Method</th>-->
+<!--        <th>Transaction ID</th>-->
+<!--        <th>Action</th>-->
+<!--      </tr>-->
+<!--      </thead>-->
+<!--      <tbody>-->
+<!--      <tr *ngFor="let payment of payments">-->
+<!--        <td>{{ payment.paymentID }}</td>-->
+<!--        <td>{{ payment.procurement?.id }}</td>-->
+<!--        <td>{{ payment.paymentAccount }}</td>-->
+<!--        <td>{{ payment.paymentAmount }}</td>-->
+<!--        <td>{{ payment.paymentDate | date }}</td>-->
+<!--        <td>{{ payment.paymentMethod }}</td>-->
+<!--        <td>{{ payment.transactionId }}</td>-->
+<!--        <td>-->
+<!--          <button class="btn btn-primary" (click)="editPayment(payment)">Edit</button>-->
+<!--          <button class="btn btn-danger" (click)="deletePayment(payment.paymentID)">Delete</button>-->
+<!--        </td>-->
+<!--      </tr>-->
+<!--      </tbody>-->
+<!--    </table>-->
+<!--  </div>-->
+<!--</div>-->
+
+
+

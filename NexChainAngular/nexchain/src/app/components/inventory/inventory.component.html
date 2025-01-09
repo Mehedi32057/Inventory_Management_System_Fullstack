@@ -1,0 +1,183 @@
+<!--&lt;!&ndash; inventory.component.html &ndash;&gt;-->
+
+<!--<div class="container">-->
+<!--  <h2>Inventory</h2>-->
+
+<!--  &lt;!&ndash; Add Inventory Form &ndash;&gt;-->
+<!--  <div class="card">-->
+<!--    <div class="card-header">-->
+<!--      Add New Inventory-->
+<!--    </div>-->
+<!--    <div class="card-body">-->
+<!--      <form [formGroup]="inventoryForm" (ngSubmit)="saveInventory()">-->
+<!--        &lt;!&ndash; Raw Material Dropdown &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--          <label for="rawMaterial">Raw Material</label>-->
+<!--          <select class="form-control" id="rawMaterial" formControlName="rawMaterial">-->
+<!--            <option *ngFor="let material of rawMaterials" [value]="material.materialName">{{ material.materialName }}</option>-->
+<!--          </select>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Quantity in Stock &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--          <label for="quantityInStock">Quantity in Stock</label>-->
+<!--          <input type="number" class="form-control" id="quantityInStock" formControlName="quantityInStock" placeholder="Quantity in Stock">-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Unit Price &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--          <label for="unitPrice">Unit Price</label>-->
+<!--          <input type="number" class="form-control" id="unitPrice" formControlName="unitPrice" placeholder="Unit Price">-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Last Stock Update Date &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--          <label for="lastStockUpdateDate">Last Stock Update Date</label>-->
+<!--          <input type="date" class="form-control" id="lastStockUpdateDate" formControlName="lastStockUpdateDate" placeholder="Last Stock Update Date">-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Procurement &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--          <label for="procurement">Procurement</label>-->
+<!--          <input type="text" class="form-control" id="procurement" formControlName="procurement" placeholder="Procurement">-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Submit Button &ndash;&gt;-->
+<!--        <button type="submit" class="btn btn-primary">Save Inventory</button>-->
+<!--      </form>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!-- &lt;!&ndash; Date range inputs &ndash;&gt;-->
+<!-- <form [formGroup]="dateRangeForm" (ngSubmit)="onSubmit()">-->
+<!--  &lt;!&ndash; Date range inputs &ndash;&gt;-->
+<!--  <div class="form-group">-->
+<!--    <label for="startDate">Start Date:</label>-->
+<!--    <input type="date" class="form-control" formControlName="startDate">-->
+<!--  </div>-->
+<!--  <div class="form-group">-->
+<!--    <label for="endDate">End Date:</label>-->
+<!--    <input type="date" class="form-control" formControlName="endDate">-->
+<!--  </div>-->
+<!--  &lt;!&ndash; Submit button &ndash;&gt;-->
+<!--  <button type="submit" class="btn btn-primary">Filter</button>-->
+<!--</form>-->
+
+<!--&lt;!&ndash; Inventory List &ndash;&gt;-->
+<!--<div class="mt-4">-->
+<!--  <h3>Inventory List</h3>-->
+<!--  <table class="table">-->
+<!--    <thead>-->
+<!--      <tr>-->
+<!--        <th>Raw Material</th>-->
+<!--        <th>Quantity in Stock</th>-->
+<!--        <th>Unit Price</th>-->
+<!--        <th>Inventory Added Date</th>-->
+<!--        <th>Procurement</th>-->
+<!--      </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+<!--      &lt;!&ndash; Filtered inventory list based on date range &ndash;&gt;-->
+<!--      <tr *ngFor="let inventory of filteredInventoryList">-->
+<!--        <td>{{ inventory.rawMaterial?.materialName }}</td>-->
+<!--        <td>{{ inventory.quantityInStock }}</td>-->
+<!--        <td>{{ inventory.unitPrice }}</td>-->
+<!--        <td>{{ inventory.lastStockUpdateDate }}</td>-->
+<!--        <td>{{ inventory.procurement?.supplier?.supplierName }}</td>-->
+<!--      </tr>-->
+<!--    </tbody>-->
+<!--  </table>-->
+<!--</div>-->
+<!--</div>-->
+
+
+
+<!--===========================NEW CODE===========================-->
+<div class="container">
+  <h2>Inventory</h2>
+
+  <!-- Add Inventory Form -->
+  <div class="card">
+    <div class="card-header">
+      Add New Inventory
+    </div>
+    <div class="card-body">
+      <form [formGroup]="inventoryForm" (ngSubmit)="saveInventory()">
+        <!-- Raw Material Dropdown -->
+        <div class="form-group">
+          <label for="rawMaterial">Raw Material</label>
+          <select class="form-control" id="rawMaterial" formControlName="rawMaterial">
+            <option *ngFor="let material of rawMaterials" [ngValue]="material">{{ material.materialName }}</option>
+          </select>
+        </div>
+
+        <!-- Quantity in Stock -->
+        <div class="form-group">
+          <label for="quantityInStock">Quantity in Stock</label>
+          <input type="number" class="form-control" id="quantityInStock" formControlName="quantityInStock" placeholder="Quantity in Stock">
+        </div>
+
+        <!-- Unit Price -->
+        <div class="form-group">
+          <label for="unitPrice">Unit Price</label>
+          <input type="number" class="form-control" id="unitPrice" formControlName="unitPrice" placeholder="Unit Price">
+        </div>
+
+        <!-- Last Stock Update Date -->
+        <div class="form-group">
+          <label for="lastStockUpdateDate">Last Stock Update Date</label>
+          <input type="date" class="form-control" id="lastStockUpdateDate" formControlName="lastStockUpdateDate" placeholder="Last Stock Update Date">
+        </div>
+
+        <!-- Procurement Dropdown -->
+        <div class="form-group">
+          <label for="procurement">Procurement</label>
+          <select class="form-control" id="procurement" formControlName="procurement">
+            <option *ngFor="let procurement of procurements" [ngValue]="procurement">{{ procurement.supplier?.supplierName }}</option>
+          </select>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Save Inventory</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Date range inputs -->
+  <form [formGroup]="dateRangeForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="startDate">Start Date:</label>
+      <input type="date" class="form-control" formControlName="startDate">
+    </div>
+    <div class="form-group">
+      <label for="endDate">End Date:</label>
+      <input type="date" class="form-control" formControlName="endDate">
+    </div>
+    <button type="submit" class="btn btn-primary">Filter</button>
+  </form>
+
+  <!-- Inventory List -->
+  <div class="mt-4">
+    <h3>Inventory List</h3>
+    <table class="table">
+      <thead>
+      <tr>
+        <th>Raw Material</th>
+        <th>Quantity in Stock</th>
+        <th>Unit Price</th>
+        <th>Inventory Added Date</th>
+        <th>Procurement</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let inventory of filteredInventoryList">
+        <td>{{ inventory.rawMaterial?.materialName }}</td>
+        <td>{{ inventory.quantityInStock }}</td>
+        <td>{{ inventory.unitPrice }}</td>
+        <td>{{ inventory.lastStockUpdateDate }}</td>
+        <td>{{ inventory.procurement?.supplier?.supplierName }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
